@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - UG HealthConnect</title>
+    <meta name="description" content="Login to UG HealthConnect - Secure healthcare management system">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2c5aa0 0%, #20c997 50%, #1e7e34 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('images/healthcare-blocks.jpg') center/cover no-repeat;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 450px;
+            padding: 0 20px;
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #2c5aa0, #20c997);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .login-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-header p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 0.95rem;
+        }
+        
+        .login-body {
+            padding: 2.5rem 2rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group-text {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-right: none;
+            color: #6c757d;
+            width: 45px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .form-control {
+            border-left: none;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 1px solid #dee2e6;
+        }
+        
+        .form-control:focus {
+            border-color: #20c997;
+            box-shadow: 0 0 0 0.2rem rgba(32, 201, 151, 0.25);
+            border-left: 1px solid #20c997;
+        }
+        
+        .form-control:focus + .input-group-text {
+            border-color: #20c997;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 0.9rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #2c5aa0, #20c997);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(32, 201, 151, 0.3);
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(32, 201, 151, 0.4);
+            background: linear-gradient(135deg, #1e4a7a, #17a085);
+        }
+        
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .alert {
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .back-to-home {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .back-to-home a {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .back-to-home a:hover {
+            color: #20c997;
+        }
+        
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            z-index: 10;
+        }
+        
+        .password-toggle:hover {
+            color: #20c997;
+        }
+        
+        .form-floating-custom {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-card">
+                <!-- Login Header -->
+                <div class="login-header">
+                    <div class="mb-3">
+                        <i class="fas fa-user-lock fa-3x"></i>
+                    </div>
+                    <h2>Welcome Back</h2>
+                    <p>Login to access your UG HealthConnect dashboard</p>
+                </div>
+                
+                <!-- Login Body -->
+                <div class="login-body">
+                    <!-- Alert Messages -->
+                    <div id="alertContainer"></div>
+                    
+                    <!-- Login Form -->
+                    <form id="loginForm">
+                        <!-- Username/Email Input -->
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user me-1"></i>Username or Email
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="username" 
+                                    name="username" 
+                                    placeholder="Enter your username or email"
+                                    required
+                                    autocomplete="username"
+                                >
+                            </div>
+                        </div>
+                        
+                        <!-- Password Input -->
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-1"></i>Password
+                            </label>
+                            <div class="form-floating-custom">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input 
+                                        type="password" 
+                                        class="form-control" 
+                                        id="password" 
+                                        name="password" 
+                                        placeholder="Enter your password"
+                                        required
+                                        autocomplete="current-password"
+                                    >
+                                </div>
+                                <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Login Button -->
+                        <button type="submit" class="btn btn-login" id="loginButton">
+                            <span id="loginButtonText">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </span>
+                            <span id="loginButtonSpinner" class="d-none">
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Logging in...
+                            </span>
+                        </button>
+                    </form>
+                    
+                    <!-- Back to Home -->
+                    <div class="back-to-home">
+                        <a href="index.html">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Homepage
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Info -->
+            <div class="text-center mt-4 text-white">
+                <p class="mb-1">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    <strong>Secure Authentication</strong>
+                </p>
+                <p class="small mb-0" style="opacity: 0.9;">
+                    Your credentials are encrypted and protected with JWT tokens
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Login Script -->
+    <script src="login.js"></script>
+</body>
+</html>

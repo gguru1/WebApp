@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - UG HealthConnect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #1e7e34;
+            --accent-color: #20c997;
+        }
+        
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
+            background: rgba(255,255,255,0.2);
+            border-left: 4px solid white;
+        }
+        
+        .sidebar-menu li a i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .top-bar {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-color);
+        }
+        
+        .badge-admin { background: var(--primary-color); }
+        .badge-patient { background: var(--secondary-color); }
+        .badge-doctor { background: var(--accent-color); }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+        }
+        
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h4><i class="fas fa-heartbeat me-2"></i>UG HealthConnect</h4>
+            <small>Admin Panel</small>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-chart-line"></i>Dashboard</a></li>
+            <li><a href="#" data-section="users"><i class="fas fa-users"></i>All Users</a></li>
+            <li><a href="#" data-section="patients"><i class="fas fa-user"></i>Patients</a></li>
+            <li><a href="#" data-section="doctors"><i class="fas fa-user-md"></i>Doctors</a></li>
+            <li><a href="#" data-section="appointments"><i class="fas fa-calendar-check"></i>Appointments</a></li>
+            <li><a href="#" data-section="settings"><i class="fas fa-cog"></i>Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div>
+                <h3 class="mb-0">Admin Dashboard</h3>
+                <small class="text-muted">Welcome back, <span id="adminName">Admin</span></small>
+            </div>
+            <div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                    <i class="fas fa-plus me-2"></i>Create User
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(44, 90, 160, 0.1); color: var(--primary-color);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h6 class="text-muted mb-1">Total Users</h6>
+                    <h2 class="mb-0" id="totalUsers">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(30, 126, 52, 0.1); color: var(--secondary-color);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h6 class="text-muted mb-1">Patients</h6>
+                    <h2 class="mb-0" id="totalPatients">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(32, 201, 151, 0.1); color: var(--accent-color);">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h6 class="text-muted mb-1">Doctors</h6>
+                    <h2 class="mb-0" id="totalDoctors">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(255, 193, 7, 0.1); color: #ffc107;">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h6 class="text-muted mb-1">Appointments</h6>
+                    <h2 class="mb-0" id="totalAppointments">0</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">All Users</h5>
+                <input type="text" class="form-control w-25" placeholder="Search users..." id="searchInput">
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create User Modal -->
+    <div class="modal fade" id="createUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Create New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createUserForm">
+                        <div class="mb-3">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="first_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" required minlength="6">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" name="role" required>
+                                <option value="">Select role...</option>
+                                <option value="admin">Admin</option>
+                                <option value="patient">Patient</option>
+                                <option value="doctor">Doctor</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Create User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        // Check authentication
+        if (!token || user.role !== 'admin') {
+            window.location.href = 'login.html';
+        }
+
+        // Set admin name
+        document.getElementById('adminName').textContent = user.first_name || user.username;
+
+        // Fetch users
+        async function fetchUsers() {
+            try {
+                const response = await fetch(`${API_URL}/users`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayUsers(data.users);
+                    updateStats(data.users);
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                alert('Failed to load users');
+            }
+        }
+
+        // Display users in table
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td>${u.user_id}</td>
+                    <td>${u.first_name} ${u.last_name}</td>
+                    <td>${u.username}</td>
+                    <td>${u.email}</td>
+                    <td><span class="badge badge-${u.role}">${u.role}</span></td>
+                    <td>${u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editUser(${u.user_id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.user_id}, '${u.username}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Update stats
+        function updateStats(users) {
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalPatients').textContent = users.filter(u => u.role === 'patient').length;
+            document.getElementById('totalDoctors').textContent = users.filter(u => u.role === 'doctor').length;
+        }
+
+        // Create user
+        document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const userData = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch(`${API_URL}/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('User created successfully!');
+                    bootstrap.Modal.getInstance(document.getElementById('createUserModal')).hide();
+                    e.target.reset();
+                    fetchUsers();
+                } else {
+                    alert(data.message || 'Failed to create user');
+                }
+            } catch (error) {
+                console.error('Error creating user:', error);
+                alert('Failed to create user');
+            }
+        });
+
+        // Delete user
+        async function deleteUser(userId, username) {
+            if (!confirm(`Are you sure you want to delete user "${username}"?`)) return;
+
+            try {
+                const response = await fetch(`${API_URL}/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('User deleted successfully!');
+                    fetchUsers();
+                } else {
+                    alert(data.message || 'Failed to delete user');
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('Failed to delete user');
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#usersTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Initial load
+        fetchUsers();
+    </script>
+</body>
+</html>
