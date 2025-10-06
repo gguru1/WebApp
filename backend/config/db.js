@@ -29,19 +29,19 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        console.log('✅ Supabase PostgreSQL Database Connected Successfully');
-        console.log('🌐 Connection: Supabase Cloud Database');
+        console.log(' Supabase PostgreSQL Database Connected Successfully');
+        console.log(' Connection: Supabase Cloud Database');
         
         // Sync all models (creates tables if they don't exist)
         // IMPORTANT: Use { alter: true } in development only
         if (process.env.NODE_ENV === 'development') {
             await sequelize.sync({ alter: true });
-            console.log('✅ All models synchronized with database');
+            console.log(' All models synchronized with database');
         }
         
     } catch (error) {
-        console.error('❌ Unable to connect to Supabase PostgreSQL:', error.message);
-        console.error('💡 Check your DATABASE_URL in .env file');
+        console.error(' Unable to connect to Supabase PostgreSQL:', error.message);
+        console.error(' Check your DATABASE_URL in .env file');
         process.exit(1);
     }
 };

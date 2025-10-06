@@ -234,7 +234,7 @@ npm run seed       # Seed database with demo data
 - Enable SSL in production
 - Use environment-specific configurations
 
-## Epic 2 Deliverables ✅
+## Epic 2 Deliverables
 
 - [x] Database design (PostgreSQL/Supabase)
 - [x] API with `/api/auth/login` route

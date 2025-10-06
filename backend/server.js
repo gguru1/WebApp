@@ -82,14 +82,14 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
-    console.log(`📡 API available at http://localhost:${PORT}/api`);
-    console.log(`🐘 Database: PostgreSQL`);
+    console.log(` Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+    console.log(` API available at http://localhost:${PORT}/api`);
+    console.log(` Database: PostgreSQL`);
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
-    console.log('❌ Unhandled Rejection:', err.message);
+    console.log(' Unhandled Rejection:', err.message);
     // Close server & exit process
     server.close(() => process.exit(1));
 });
