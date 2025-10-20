@@ -1,4 +1,4 @@
-// routes/appointments.js - Appointment Routes
+// routes/appointments.js - Updated Appointment Routes
 
 const express = require('express');
 const router = express.Router();
@@ -11,15 +11,16 @@ const {
     getTodayAppointments,
     getUpcomingAppointments,
     getAppointmentHistory,
+    searchAppointments,
     createAppointment,
     updateAppointment,
-    cancelAppointment
+    cancelAppointment,
+    deleteAppointment
 } = require('../controllers/appointmentController');
-
-// Public routes (none - all require authentication)
 
 // Protected routes - require authentication
 // Special routes (must come before /:id route)
+router.get('/search', protect, authorize('admin'), searchAppointments);
 router.get('/today', protect, getTodayAppointments);
 router.get('/upcoming', protect, getUpcomingAppointments);
 router.get('/history', protect, getAppointmentHistory);
@@ -31,6 +32,7 @@ router.get('/', protect, authorize('admin'), getAllAppointments);
 router.get('/:id', protect, getAppointment);
 router.post('/', protect, authorize('admin'), createAppointment);
 router.put('/:id', protect, updateAppointment);
-router.delete('/:id', protect, cancelAppointment);
+router.delete('/:id', protect, cancelAppointment); // Soft delete (cancel)
+router.delete('/:id/permanent', protect, authorize('admin'), deleteAppointment); // Hard delete (admin only)
 
 module.exports = router;

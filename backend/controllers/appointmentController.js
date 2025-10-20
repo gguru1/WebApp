@@ -1,4 +1,4 @@
-// controllers/appointmentController.js - Appointment Management Controller
+// controllers/appointmentController.js - Enhanced Appointment Management Controller
 
 const Appointment = require('../models/Appointment');
 const User = require('../models/User');
@@ -342,7 +342,106 @@ exports.getAppointmentHistory = async (req, res) => {
     }
 };
 
-// @desc    Create new appointment
+// @desc    Search appointments by patient or doctor name
+// @route   GET /api/appointments/search
+// @access  Private/Admin
+exports.searchAppointments = async (req, res) => {
+    try {
+        const { query, type } = req.query; // type can be 'patient' or 'doctor'
+        
+        if (!query) {
+            return res.status(400).json({
+                success: false,
+                message: 'Search query is required'
+            });
+        }
+
+        const searchCondition = {
+            [Op.or]: [
+                { first_name: { [Op.iLike]: `%${query}%` } },
+                { last_name: { [Op.iLike]: `%${query}%` } }
+            ]
+        };
+
+        let appointments;
+
+        if (type === 'patient') {
+            appointments = await Appointment.findAll({
+                include: [
+                    {
+                        model: User,
+                        as: 'patient',
+                        where: searchCondition,
+                        attributes: ['user_id', 'first_name', 'last_name', 'email']
+                    },
+                    {
+                        model: User,
+                        as: 'doctor',
+                        attributes: ['user_id', 'first_name', 'last_name', 'email']
+                    }
+                ],
+                order: [['date', 'DESC'], ['start_time', 'DESC']]
+            });
+        } else if (type === 'doctor') {
+            appointments = await Appointment.findAll({
+                include: [
+                    {
+                        model: User,
+                        as: 'patient',
+                        attributes: ['user_id', 'first_name', 'last_name', 'email']
+                    },
+                    {
+                        model: User,
+                        as: 'doctor',
+                        where: searchCondition,
+                        attributes: ['user_id', 'first_name', 'last_name', 'email']
+                    }
+                ],
+                order: [['date', 'DESC'], ['start_time', 'DESC']]
+            });
+        } else {
+            // Search both patient and doctor
+            appointments = await Appointment.findAll({
+                include: [
+                    {
+                        model: User,
+                        as: 'patient',
+                        attributes: ['user_id', 'first_name', 'last_name', 'email']
+                    },
+                    {
+                        model: User,
+                        as: 'doctor',
+                        attributes: ['user_id', 'first_name', 'last_name', 'email']
+                    }
+                ],
+                where: {
+                    [Op.or]: [
+                        { '$patient.first_name$': { [Op.iLike]: `%${query}%` } },
+                        { '$patient.last_name$': { [Op.iLike]: `%${query}%` } },
+                        { '$doctor.first_name$': { [Op.iLike]: `%${query}%` } },
+                        { '$doctor.last_name$': { [Op.iLike]: `%${query}%` } }
+                    ]
+                },
+                order: [['date', 'DESC'], ['start_time', 'DESC']]
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            count: appointments.length,
+            appointments
+        });
+    } catch (error) {
+        console.error('Search appointments error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error searching appointments',
+            error: error.message
+        });
+    }
+};
+
+// @desc    Create new appointment (Admin only)
 // @route   POST /api/appointments
 // @access  Private/Admin
 exports.createAppointment = async (req, res) => {
@@ -365,7 +464,7 @@ exports.createAppointment = async (req, res) => {
         if (!patient) {
             return res.status(404).json({
                 success: false,
-                message: 'Patient not found'
+                message: 'Patient not found or user is not a patient'
             });
         }
 
@@ -377,11 +476,11 @@ exports.createAppointment = async (req, res) => {
         if (!doctor) {
             return res.status(404).json({
                 success: false,
-                message: 'Doctor not found'
+                message: 'Doctor not found or user is not a doctor'
             });
         }
 
-        // Check for time conflicts with existing appointments
+        // Check for time conflicts with existing appointments for this doctor
         const conflict = await Appointment.findOne({
             where: {
                 doctor_id,
@@ -455,7 +554,7 @@ exports.createAppointment = async (req, res) => {
     }
 };
 
-// @desc    Update appointment
+// @desc    Update appointment (Admin can update all, others limited)
 // @route   PUT /api/appointments/:id
 // @access  Private
 exports.updateAppointment = async (req, res) => {
@@ -473,15 +572,11 @@ exports.updateAppointment = async (req, res) => {
             });
         }
 
-        // Check authorization
-        const isAuthorized = 
-            req.user.role === 'admin' ||
-            req.user.user_id === appointment.doctor_id;
-
-        if (!isAuthorized) {
+        // Check authorization - only admin can fully update
+        if (req.user.role !== 'admin') {
             return res.status(403).json({
                 success: false,
-                message: 'Not authorized to update this appointment'
+                message: 'Only admin can update appointments'
             });
         }
 
@@ -490,7 +585,7 @@ exports.updateAppointment = async (req, res) => {
         if (start_time) appointment.start_time = start_time;
         if (end_time) appointment.end_time = end_time;
         if (status) appointment.status = status;
-        if (reason) appointment.reason = reason;
+        if (reason !== undefined) appointment.reason = reason;
         if (notes !== undefined) appointment.notes = notes;
 
         await appointment.save();
@@ -527,7 +622,7 @@ exports.updateAppointment = async (req, res) => {
     }
 };
 
-// @desc    Cancel appointment
+// @desc    Cancel appointment (Patient can cancel their own, Admin can cancel any)
 // @route   DELETE /api/appointments/:id
 // @access  Private
 exports.cancelAppointment = async (req, res) => {
@@ -543,16 +638,18 @@ exports.cancelAppointment = async (req, res) => {
             });
         }
 
-        // Check authorization
-        const isAuthorized = 
-            req.user.role === 'admin' ||
-            req.user.user_id === appointment.patient_id ||
-            req.user.user_id === appointment.doctor_id;
-
-        if (!isAuthorized) {
+        // Check authorization - patient can only cancel their own, admin can cancel any
+        if (req.user.role === 'patient' && req.user.user_id !== appointment.patient_id) {
             return res.status(403).json({
                 success: false,
                 message: 'Not authorized to cancel this appointment'
+            });
+        }
+
+        if (req.user.role === 'doctor') {
+            return res.status(403).json({
+                success: false,
+                message: 'Doctors cannot cancel appointments. Please contact admin.'
             });
         }
 
@@ -570,6 +667,38 @@ exports.cancelAppointment = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error cancelling appointment',
+            error: error.message
+        });
+    }
+};
+
+// @desc    Delete appointment permanently (Admin only)
+// @route   DELETE /api/appointments/:id/permanent
+// @access  Private/Admin
+exports.deleteAppointment = async (req, res) => {
+    try {
+        const appointment = await Appointment.findOne({
+            where: { appointment_id: req.params.id }
+        });
+
+        if (!appointment) {
+            return res.status(404).json({
+                success: false,
+                message: 'Appointment not found'
+            });
+        }
+
+        await appointment.destroy();
+
+        res.status(200).json({
+            success: true,
+            message: 'Appointment permanently deleted'
+        });
+    } catch (error) {
+        console.error('Delete appointment error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error deleting appointment',
             error: error.message
         });
     }

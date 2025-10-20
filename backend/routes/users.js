@@ -1,4 +1,4 @@
-// routes/users.js - User Management Routes for PostgreSQL
+// routes/users.js - Fixed User Management Routes for PostgreSQL
 
 const express = require('express');
 const router = express.Router();
@@ -22,6 +22,7 @@ router.get('/', protect, authorize('admin'), async (req, res) => {
             users
         });
     } catch (error) {
+        console.error('Get all users error:', error);
         res.status(500).json({
             success: false,
             message: 'Error fetching users',
@@ -37,9 +38,18 @@ router.get('/role/:role', protect, authorize('admin'), async (req, res) => {
     try {
         const { role } = req.params;
         
+        // Validate role
+        if (!['admin', 'patient', 'doctor'].includes(role)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid role. Must be admin, patient, or doctor'
+            });
+        }
+        
         const users = await User.findAll({
             where: { role },
-            attributes: { exclude: ['password'] }
+            attributes: { exclude: ['password'] },
+            order: [['user_id', 'ASC']]
         });
         
         res.status(200).json({
@@ -48,6 +58,7 @@ router.get('/role/:role', protect, authorize('admin'), async (req, res) => {
             users
         });
     } catch (error) {
+        console.error('Get users by role error:', error);
         res.status(500).json({
             success: false,
             message: 'Error fetching users by role',
@@ -78,6 +89,7 @@ router.get('/:userId', protect, authorize('admin'), async (req, res) => {
             user
         });
     } catch (error) {
+        console.error('Get user error:', error);
         res.status(500).json({
             success: false,
             message: 'Error fetching user',
@@ -93,21 +105,73 @@ router.post('/', protect, authorize('admin'), async (req, res) => {
     try {
         const { first_name, last_name, username, email, password, role } = req.body;
         
-        // Check if user already exists
+        // Validate required fields
+        if (!first_name || !last_name || !username || !email || !password || !role) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide all required fields: first_name, last_name, username, email, password, role'
+            });
+        }
+
+        // Validate role
+        if (!['admin', 'patient', 'doctor'].includes(role)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid role. Must be admin, patient, or doctor'
+            });
+        }
+
+        // Validate password length
+        if (password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be at least 6 characters long'
+            });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide a valid email address'
+            });
+        }
+
+        // Validate username length
+        if (username.length < 3) {
+            return res.status(400).json({
+                success: false,
+                message: 'Username must be at least 3 characters long'
+            });
+        }
+        
+        // Check if user already exists (username or email)
         const existingUser = await User.findOne({
             where: {
-                [Op.or]: [{ username }, { email }]
+                [Op.or]: [
+                    { username: username.toLowerCase() },
+                    { email: email.toLowerCase() }
+                ]
             }
         });
         
         if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: 'User with this username or email already exists'
-            });
+            if (existingUser.username === username.toLowerCase()) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Username already exists'
+                });
+            }
+            if (existingUser.email === email.toLowerCase()) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Email already exists'
+                });
+            }
         }
         
-        // Create user
+        // Create user (password will be hashed by beforeCreate hook)
         const user = await User.create({
             first_name,
             last_name,
@@ -123,7 +187,26 @@ router.post('/', protect, authorize('admin'), async (req, res) => {
             user: user.toSafeObject()
         });
     } catch (error) {
-        res.status(400).json({
+        console.error('Create user error:', error);
+        
+        // Handle Sequelize validation errors
+        if (error.name === 'SequelizeValidationError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Validation error',
+                errors: error.errors.map(e => e.message)
+            });
+        }
+        
+        // Handle unique constraint errors
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Username or email already exists'
+            });
+        }
+        
+        res.status(500).json({
             success: false,
             message: 'Error creating user',
             error: error.message
@@ -148,6 +231,43 @@ router.put('/:userId', protect, authorize('admin'), async (req, res) => {
                 message: 'User not found'
             });
         }
+
+        // Prevent updating username (it's unique and shouldn't change)
+        // Prevent updating password through this route (use change-password)
+        
+        // Validate email if provided
+        if (email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Please provide a valid email address'
+                });
+            }
+
+            // Check if email already exists for another user
+            const existingEmail = await User.findOne({
+                where: {
+                    email: email.toLowerCase(),
+                    user_id: { [Op.ne]: req.params.userId }
+                }
+            });
+
+            if (existingEmail) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Email already exists'
+                });
+            }
+        }
+
+        // Validate role if provided
+        if (role && !['admin', 'patient', 'doctor'].includes(role)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid role. Must be admin, patient, or doctor'
+            });
+        }
         
         // Update fields
         if (first_name) user.first_name = first_name;
@@ -163,7 +283,18 @@ router.put('/:userId', protect, authorize('admin'), async (req, res) => {
             user: user.toSafeObject()
         });
     } catch (error) {
-        res.status(400).json({
+        console.error('Update user error:', error);
+        
+        // Handle Sequelize validation errors
+        if (error.name === 'SequelizeValidationError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Validation error',
+                errors: error.errors.map(e => e.message)
+            });
+        }
+        
+        res.status(500).json({
             success: false,
             message: 'Error updating user',
             error: error.message
@@ -186,6 +317,32 @@ router.delete('/:userId', protect, authorize('admin'), async (req, res) => {
                 message: 'User not found'
             });
         }
+
+        // Prevent admin from deleting themselves
+        if (user.user_id === req.user.user_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'You cannot delete your own account'
+            });
+        }
+
+        // Check if user has appointments
+        const Appointment = require('../models/Appointment');
+        const userAppointments = await Appointment.count({
+            where: {
+                [Op.or]: [
+                    { patient_id: req.params.userId },
+                    { doctor_id: req.params.userId }
+                ]
+            }
+        });
+
+        if (userAppointments > 0) {
+            return res.status(400).json({
+                success: false,
+                message: `Cannot delete user. User has ${userAppointments} appointment(s). Please cancel or delete appointments first.`
+            });
+        }
         
         await user.destroy();
         
@@ -194,6 +351,7 @@ router.delete('/:userId', protect, authorize('admin'), async (req, res) => {
             message: 'User deleted successfully'
         });
     } catch (error) {
+        console.error('Delete user error:', error);
         res.status(500).json({
             success: false,
             message: 'Error deleting user',

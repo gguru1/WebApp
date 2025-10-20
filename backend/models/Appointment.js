@@ -1,4 +1,4 @@
-// models/Appointment.js - Appointment Model for PostgreSQL using Sequelize
+// models/Appointment.js - Updated Appointment Model for PostgreSQL using Sequelize
 
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
@@ -50,7 +50,8 @@ const Appointment = sequelize.define('appointments', {
     },
     status: {
         type: DataTypes.ENUM('scheduled', 'cancelled', 'completed', 'no-show'),
-        defaultValue: 'scheduled'
+        defaultValue: 'scheduled',
+        allowNull: false
     },
     reason: {
         type: DataTypes.TEXT,
