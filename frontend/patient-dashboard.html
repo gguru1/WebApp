@@ -211,6 +211,34 @@
                         </button>
                     </div>
                 </div>
+                <!-- Profile Modal -->
+				<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+					<div class="modal-content">
+					 iv class="modal-header">
+					 <h class="modal-title" id="profileModalLabel">Update Profile</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					  </div>
+					  <div class="modal-body">
+						<form id="updateProfileForm">
+						  <div class="mb-3">
+							<label for="profileName" class="form-label">Name</label>
+							<input type="text" class="form-control" id="profileName" required>
+						  </div>
+						  <div class="mb-3">
+							<label for="profileEmail" class="form-label">Email</label>
+							<input type="email" class="form-control" id="profileEmail" required>
+						  </div>
+						  <div class="mb-3">
+							<label for="profilePhone" class="form-label">Username</label>
+							<input type="text" class="form-control" id="profileUsername">
+						  </div>
+						  <button type="submit" class="btn btn-success">Save Changes</button>
+						</form>
+					  </div>
+					</div>
+				  </div>
+				</div>
 
                 <!-- Profile Info -->
                 <div class="dashboard-card">
@@ -346,7 +374,36 @@
         } else {
             document.getElementById('patientName').textContent = 'Patient';
         }
+        // Get references
+		 const profileModalEl = document.getElementById('profileModal');
+		 const profileForm = document.getElementById('updateProfileForm');
+  
+		 // Pre-fill modal inputs when modal opens
+		 profileModalEl.addEventListener('show.bs.modal', () => {
+		 document.getElementById('profileName').value = document.getElementById('fullName').textContent !== '-' ? document.getElementById('fullName').textContent : '';
+		 document.getElementById('profileEmail').value = document.getElementById('email').textContent !== '-' ? document.getElementById('email').textContent : '';
+		 document.getElementById('profileUsername').value = document.getElementById('username').textContent !== '-' ? document.getElementById('username').textContent : '';
+		 });
 
+		// On form submit, update profile display
+		profileForm.addEventListener('submit', (e) => {
+		e.preventDefault(); // Prevent form from reloading page
+
+	   // Get values from modal inputs
+		const name = document.getElementById('profileName').value;
+		const email = document.getElementById('profileEmail').value;
+		const username = document.getElementById('profileUsername').value;
+
+	   // Update profile info on page
+		document.getElementById('fullName').textContent = name;
+		document.getElementById('email').textContent = email;
+		document.getElementById('username').textContent = username;
+
+	   // Close the modal
+		const modalInstance = bootstrap.Modal.getInstance(profileModalEl);
+		modalInstance.hide();
+
+	   });
         // Load user profile
         function loadProfile() {
             document.getElementById('fullName').textContent = `${user.first_name} ${user.last_name}`;
@@ -355,7 +412,7 @@
             document.getElementById('lastLogin').textContent = user.last_login ? 
                 new Date(user.last_login).toLocaleString() : 'Never';
         }
-
+        
         // Load appointments from API
         async function loadAppointments() {
             try {
