@@ -51,7 +51,7 @@ FRONTEND_URL=http://localhost:3000
 This creates tables and adds the admin user only:
 
 ```bash
-npm run seed
+NOT IMPLEMENTED
 ```
 
 **Note:** All patients, doctors, and appointments should be created through the admin dashboard.
