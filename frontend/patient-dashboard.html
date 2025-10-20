@@ -157,7 +157,7 @@
                     <i class="fas fa-user"></i>
                 </div>
                 <div>
-                    <h2>Welcome, <span id="patientName">Patient</span>!</h2>
+                    <h2>Welcome, <span id="patientName">Loading...</span>!</h2>
                     <p class="mb-0 opacity-75">Manage your healthcare appointments</p>
                 </div>
             </div>
@@ -199,10 +199,11 @@
                 <div class="dashboard-card">
                     <h5 class="mb-3"><i class="fas fa-bolt text-warning me-2"></i>Quick Actions</h5>
                     <div class="d-grid gap-2">
-                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">
-                            <i class="fas fa-calendar-plus me-2"></i>Schedule Appointment
-                        </button>
-                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#profileModal">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small><strong>Note:</strong> To schedule an appointment, please contact the Clerk office.</small>
+                        </div>
+                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#profileModal" disabled>
                             <i class="fas fa-user-edit me-2"></i>Update Profile
                         </button>
                         <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#passwordModal">
@@ -248,48 +249,8 @@
         </div>
     </div>
 
-    <!-- Schedule Appointment Modal -->
-    <div class="modal fade" id="scheduleModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-calendar-plus me-2"></i>Schedule New Appointment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="scheduleForm">
-                        <div class="mb-3">
-                            <label class="form-label">Select Doctor</label>
-                            <select class="form-select" name="doctor_id" id="doctorSelect" required>
-                                <option value="">Loading doctors...</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Appointment Date</label>
-                            <input type="date" class="form-control" name="date" id="appointmentDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Time Slot</label>
-                            <select class="form-select" name="time_slot" id="timeSlotSelect" required disabled>
-                                <option value="">Select date first</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Reason for Visit</label>
-                            <textarea class="form-control" name="reason" rows="3" required placeholder="Describe your symptoms or reason for visit"></textarea>
-                        </div>
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <small>Your appointment will be scheduled immediately. Please arrive 10 minutes early.</small>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100" id="scheduleBtn">
-                            <i class="fas fa-calendar-check me-2"></i>Schedule Appointment
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Schedule Appointment Modal - REMOVED per requirements -->
+    <!-- Only admin can schedule appointments -->
 
     <!-- Change Password Modal -->
     <div class="modal fade" id="passwordModal" tabindex="-1">
@@ -344,8 +305,14 @@
             window.location.href = 'login.html';
         }
 
-        // Set patient name immediately
-        document.getElementById('patientName').textContent = user.first_name || user.username;
+        // Set patient name with their actual first name
+        if (user.first_name) {
+            document.getElementById('patientName').textContent = user.first_name;
+        } else if (user.username) {
+            document.getElementById('patientName').textContent = user.username;
+        } else {
+            document.getElementById('patientName').textContent = 'Patient';
+        }
 
         // Load user profile
         function loadProfile() {
@@ -355,139 +322,6 @@
             document.getElementById('lastLogin').textContent = user.last_login ? 
                 new Date(user.last_login).toLocaleString() : 'Never';
         }
-
-        // Load doctors for appointment scheduling
-        async function loadDoctors() {
-            try {
-                const response = await fetch(`${API_URL}/users/role/doctor`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    const select = document.getElementById('doctorSelect');
-                    select.innerHTML = '<option value="">Select a doctor...</option>' +
-                        data.users.map(doc => 
-                            `<option value="${doc.user_id}">Dr. ${doc.first_name} ${doc.last_name}</option>`
-                        ).join('');
-                }
-            } catch (error) {
-                console.error('Error loading doctors:', error);
-            }
-        }
-
-        // Generate time slots
-        function generateTimeSlots() {
-            const slots = [];
-            for (let hour = 9; hour <= 16; hour++) {
-                slots.push(`${hour.toString().padStart(2, '0')}:00`);
-                slots.push(`${hour.toString().padStart(2, '0')}:30`);
-            }
-            return slots;
-        }
-
-        // Load available time slots when date changes
-        document.getElementById('appointmentDate').addEventListener('change', async function() {
-            const date = this.value;
-            const doctorId = document.getElementById('doctorSelect').value;
-            
-            if (!date || !doctorId) return;
-            
-            const timeSlotSelect = document.getElementById('timeSlotSelect');
-            timeSlotSelect.disabled = false;
-            timeSlotSelect.innerHTML = '<option value="">Loading available slots...</option>';
-            
-            try {
-                // Fetch doctor's appointments for selected date
-                const response = await fetch(`${API_URL}/appointments/doctor/${doctorId}?date=${date}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await response.json();
-                
-                // Get booked time slots
-                const bookedSlots = data.appointments
-                    .filter(apt => apt.status === 'scheduled')
-                    .map(apt => apt.start_time);
-                
-                // Generate all possible slots
-                const allSlots = generateTimeSlots();
-                
-                // Filter out booked slots
-                const availableSlots = allSlots.filter(slot => !bookedSlots.includes(slot));
-                
-                if (availableSlots.length === 0) {
-                    timeSlotSelect.innerHTML = '<option value="">No available slots for this date</option>';
-                } else {
-                    timeSlotSelect.innerHTML = '<option value="">Select time slot...</option>' +
-                        availableSlots.map(slot => {
-                            const endTime = addMinutes(slot, 30);
-                            return `<option value="${slot}">${slot} - ${endTime}</option>`;
-                        }).join('');
-                }
-            } catch (error) {
-                console.error('Error loading time slots:', error);
-                timeSlotSelect.innerHTML = '<option value="">Error loading slots</option>';
-            }
-        });
-
-        // Helper function to add minutes to time
-        function addMinutes(time, minutes) {
-            const [hours, mins] = time.split(':').map(Number);
-            const totalMins = hours * 60 + mins + minutes;
-            const newHours = Math.floor(totalMins / 60);
-            const newMins = totalMins % 60;
-            return `${newHours.toString().padStart(2, '0')}:${newMins.toString().padStart(2, '0')}`;
-        }
-
-        // Handle appointment scheduling
-        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            
-            const scheduleBtn = document.getElementById('scheduleBtn');
-            scheduleBtn.disabled = true;
-            scheduleBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Scheduling...';
-            
-            try {
-                const startTime = data.time_slot;
-                const endTime = addMinutes(startTime, 30);
-                
-                const response = await fetch(`${API_URL}/appointments`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        date: data.date,
-                        start_time: startTime,
-                        end_time: endTime,
-                        patient_id: user.user_id,
-                        doctor_id: parseInt(data.doctor_id),
-                        reason: data.reason
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    alert('Appointment scheduled successfully!');
-                    bootstrap.Modal.getInstance(document.getElementById('scheduleModal')).hide();
-                    e.target.reset();
-                    loadAppointments(); // Reload appointments
-                } else {
-                    alert(result.message || 'Failed to schedule appointment');
-                }
-            } catch (error) {
-                console.error('Error scheduling appointment:', error);
-                alert('Failed to schedule appointment. Please try again.');
-            } finally {
-                scheduleBtn.disabled = false;
-                scheduleBtn.innerHTML = '<i class="fas fa-calendar-check me-2"></i>Schedule Appointment';
-            }
-        });
 
         // Load appointments from API
         async function loadAppointments() {
