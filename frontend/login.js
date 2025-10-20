@@ -196,15 +196,8 @@ function addDemoCredentialsHelper() {
             <button class="btn btn-sm btn-outline-primary mt-2 me-2" onclick="fillDemo('admin')">
                 Admin Login
             </button>
-            <button class="btn btn-sm btn-outline-success mt-2 me-2" onclick="fillDemo('patient')">
-                Patient Login
-            </button>
-            <button class="btn btn-sm btn-outline-info mt-2" onclick="fillDemo('doctor')">
-                Doctor Login
-            </button>
         </small>
     `;
-    
     document.querySelector('.login-body').appendChild(demoInfo);
 }
 
@@ -212,8 +205,6 @@ function addDemoCredentialsHelper() {
 window.fillDemo = function(role) {
     const credentials = {
         'admin': { username: 'admin', password: 'admin123' },
-        'patient': { username: 'patient1', password: 'patient123' },
-        'doctor': { username: 'doctor1', password: 'doctor123' }
     };
     
     if (credentials[role]) {
