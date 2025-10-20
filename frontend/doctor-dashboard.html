@@ -318,54 +318,7 @@
         document.getElementById('doctorName').textContent = 
             `Dr. ${user.first_name} ${user.last_name}`;
 
-        // Mock appointments data
-        const mockAppointments = [
-            {
-                appointment_id: 1,
-                date: new Date().toISOString().split('T')[0],
-                start_time: '09:00',
-                end_time: '09:30',
-                status: 'scheduled',
-                reason: 'Regular checkup',
-                patient: { first_name: 'John', last_name: 'Doe' }
-            },
-            {
-                appointment_id: 2,
-                date: new Date().toISOString().split('T')[0],
-                start_time: '10:00',
-                end_time: '10:30',
-                status: 'scheduled',
-                reason: 'Follow-up consultation',
-                patient: { first_name: 'Jane', last_name: 'Smith' }
-            },
-            {
-                appointment_id: 3,
-                date: new Date().toISOString().split('T')[0],
-                start_time: '14:00',
-                end_time: '14:30',
-                status: 'scheduled',
-                reason: 'Annual physical',
-                patient: { first_name: 'Michael', last_name: 'Brown' }
-            },
-            {
-                appointment_id: 4,
-                date: getDateOffset(1),
-                start_time: '11:00',
-                end_time: '11:30',
-                status: 'scheduled',
-                reason: 'Flu symptoms',
-                patient: { first_name: 'Sarah', last_name: 'Johnson' }
-            },
-            {
-                appointment_id: 5,
-                date: getDateOffset(3),
-                start_time: '15:00',
-                end_time: '15:30',
-                status: 'scheduled',
-                reason: 'Routine checkup',
-                patient: { first_name: 'David', last_name: 'Wilson' }
-            }
-        ];
+    
 
         // Helper function to get date with offset
         function getDateOffset(days) {

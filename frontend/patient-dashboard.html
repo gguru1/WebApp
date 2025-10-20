@@ -201,10 +201,10 @@
                     <div class="d-grid gap-2">
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
-                            <small><strong>Note:</strong> To schedule an appointment, please contact the Clerk office.</small>
+                            <small><strong>Note:</strong> To schedule an appointment, please contact the admin/clerk office.</small>
                         </div>
                         <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#profileModal" disabled>
-                            <i class="fas fa-user-edit me-2"></i>Update Profile
+                            <i class="fas fa-user-edit me-2"></i>Update Profile (Coming Soon)
                         </button>
                         <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#passwordModal">
                             <i class="fas fa-key me-2"></i>Change Password
@@ -249,7 +249,6 @@
         </div>
     </div>
 
-    <!-- Schedule Appointment Modal - REMOVED per requirements -->
     <!-- Only admin can schedule appointments -->
 
     <!-- Change Password Modal -->
@@ -289,7 +288,41 @@
             console.log('Logout clicked');
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.clear();
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Cancel appointment function - Global scope for onclick
+        async function cancelAppointment(appointmentId) {
+            console.log('Cancel appointment called for ID:', appointmentId);
+            
+            if (!confirm('Are you sure you want to cancel this appointment?')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(`http://localhost:5000/api/appointments/${appointmentId}`, {
+                    method: 'DELETE',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Appointment cancelled successfully!');
+                    // Reload the page to refresh appointments
+                    window.location.reload();
+                } else {
+                    alert(result.message || 'Failed to cancel appointment');
+                }
+            } catch (error) {
+                console.error('Error cancelling appointment:', error);
+                alert('Failed to cancel appointment. Please try again.');
             }
         }
     </script>
@@ -405,6 +438,7 @@
                     <div class="empty-state">
                         <i class="fas fa-calendar-times"></i>
                         <p class="mb-0">No upcoming appointments</p>
+                        <small class="text-muted">Contact admin to schedule an appointment</small>
                     </div>
                 `;
             } else {
@@ -424,9 +458,13 @@
                                 <p class="mb-2">
                                     <i class="fas fa-clock me-1"></i>${apt.start_time} - ${apt.end_time}
                                 </p>
-                                <button class="btn btn-sm btn-danger" onclick="cancelAppointment(${apt.appointment_id})">
-                                    <i class="fas fa-times me-1"></i>Cancel
-                                </button>
+                                ${apt.status === 'scheduled' ? `
+                                    <button class="btn btn-sm btn-danger" onclick="cancelAppointment(${apt.appointment_id})">
+                                        <i class="fas fa-times me-1"></i>Cancel
+                                    </button>
+                                ` : `
+                                    <span class="badge bg-secondary">${apt.status}</span>
+                                `}
                             </div>
                         </div>
                     </div>
