@@ -48,7 +48,7 @@ FRONTEND_URL=http://localhost:3000
 
 ### 4. Seed Database (First Time Only)
 
-This creates tables and adds the admin user only:
+NOT IMPLEMENTED
 
 ```bash
 NOT IMPLEMENTED
