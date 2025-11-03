@@ -20,10 +20,13 @@ const app = express();
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-// CORS Configuration
+
+// CORS Configuration - UPDATED
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
-    credentials: true
+    origin: ['http://localhost:3000', 'http://localhost:3001'], // React dev server
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Request logging middleware
