@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
-import Navbar from '../components/Navbar';
-import HeroSection from '../components/HeroSection';
-import FeaturesSection from '../components/FeaturesSection';
-import TechnologySection from '../components/TechnologySection';
-import AboutSection from '../components/AboutSection';
-import ContactSection from '../components/ContactSection';
-import Footer from '../components/Footer';
+import Navbar from '../components/homepages/Navbar';
+import HeroSection from '../components/homepages/HeroSection';
+import FeaturesSection from '../components/homepages/FeaturesSection';
+import TechnologySection from '../components/homepages/TechnologySection';
+import AboutSection from '../components/homepages/AboutSection';
+import ContactSection from '../components/homepages/ContactSection';
+import Footer from '../components/homepages/Footer';
 import '../assets/HomePage.css';
 
 const HomePage = () => {
