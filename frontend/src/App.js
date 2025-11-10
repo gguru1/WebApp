@@ -9,6 +9,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import DoctorDashboard from './pages/DoctorDashboard';
 import PatientDashboard from './pages/PatientDashboard';
 
+// Import Layouts
+import AdminLayout from './components/admin/AdminLayout';
+
 // Import Utils
 import ProtectedRoute from './utils/ProtectedRoute';
 import authService from './services/authService';
@@ -27,10 +30,12 @@ function App() {
             path="/admin/*" 
             element={
               <ProtectedRoute requiredRole="admin">
-                <AdminDashboard />
+                <AdminLayout />
               </ProtectedRoute>
-            } 
-          />
+            }
+          >
+            <Route path="*" element={<AdminDashboard />} />
+          </Route>
           
           {/* Protected Routes - Doctor Only */}
           <Route 
