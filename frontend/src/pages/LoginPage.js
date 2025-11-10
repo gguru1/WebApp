@@ -61,7 +61,7 @@ const LoginPage = () => {
 
   const fillDemoCredentials = (role) => {
     const credentials = {
-      admin: { username: 'admin', password: 'admin123' }
+      admin: { username: 'admin', password: '123456' }
     };
     
     if (credentials[role]) {
