@@ -15,7 +15,6 @@ router.get('/', protect, authorize('admin'), async (req, res) => {
             attributes: { exclude: ['password'] },
             order: [['user_id', 'ASC']]
         });
-        
         res.status(200).json({
             success: true,
             count: users.length,

@@ -21,7 +21,7 @@ const DeleteUserModal = ({ user, onClose, onUserDeleted }) => {
 
     setLoading(true);
     try {
-      await userService.deleteUser(user.id);
+      await userService.deleteUser(user.user_id);
       alert('User deleted successfully!');
       onUserDeleted();
     } catch (error) {
