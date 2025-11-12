@@ -43,10 +43,10 @@ const appointmentService = {
     }
   },
 
-  // Delete appointment
+  // Delete appointment (permanent - admin only)
   deleteAppointment: async (id) => {
     try {
-      const response = await api.delete(`/appointments/${id}`);
+      const response = await api.delete(`/appointments/${id}/permanent`);
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to delete appointment' };
