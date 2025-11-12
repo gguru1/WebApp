@@ -1,7 +1,8 @@
-// components/admin/EditUserModal.js - Edit User Modal (Simplified)
+// components/admin/EditUserModal.js - Edit User Modal
 
 import React, { useState, useEffect } from 'react';
 import userService from '../../services/userService';
+import { validateUserForm } from '../../utils/validators';
 
 const EditUserModal = ({ user, onClose, onUserUpdated }) => {
   const [formData, setFormData] = useState({
@@ -11,8 +12,8 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
     email: '',
     role: 'patient'
   });
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -32,28 +33,45 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
       ...prev,
       [name]: value
     }));
-    setError('');
+    // Clear error for this field
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Simple validation
-    if (!formData.firstName || !formData.lastName || !formData.username || !formData.email || !formData.role) {
-      setError('All fields are required');
-      return;
+    // Validate form (excluding password for edit)
+    const validation = validateUserForm({ ...formData, password: 'dummy123' });
+    if (!validation.isValid) {
+      // Remove password error since we're not updating it
+      const { password, ...otherErrors } = validation.errors;
+      if (Object.keys(otherErrors).length > 0) {
+        setErrors(otherErrors);
+        return;
+      }
     }
 
     setLoading(true);
-    setError('');
-    
     try {
-      await userService.updateUser(user.id, formData);
+      // Convert field names to match backend (snake_case)
+      const userData = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        role: formData.role
+      };
+      
+      await userService.updateUser(user.id, userData);
       alert('User updated successfully!');
       onUserUpdated();
     } catch (error) {
       console.error('Error updating user:', error);
-      setError(error.message || 'Failed to update user');
+      alert(error.message || 'Failed to update user');
     } finally {
       setLoading(false);
     }
@@ -74,13 +92,6 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
 
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
-            {error && (
-              <div className="alert alert-danger">
-                <i className="fas fa-exclamation-circle me-2"></i>
-                {error}
-              </div>
-            )}
-
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
@@ -92,10 +103,12 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="form-control"
+                    className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
                     placeholder="Enter first name"
-                    required
                   />
+                  {errors.firstName && (
+                    <div className="invalid-feedback">{errors.firstName}</div>
+                  )}
                 </div>
               </div>
 
@@ -109,10 +122,12 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="form-control"
+                    className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
                     placeholder="Enter last name"
-                    required
                   />
+                  {errors.lastName && (
+                    <div className="invalid-feedback">{errors.lastName}</div>
+                  )}
                 </div>
               </div>
             </div>
@@ -126,10 +141,12 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="form-control"
+                className={`form-control ${errors.username ? 'is-invalid' : ''}`}
                 placeholder="Enter username"
-                required
               />
+              {errors.username && (
+                <div className="invalid-feedback">{errors.username}</div>
+              )}
             </div>
 
             <div className="form-group">
@@ -141,10 +158,12 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="form-control"
+                className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                 placeholder="Enter email"
-                required
               />
+              {errors.email && (
+                <div className="invalid-feedback">{errors.email}</div>
+              )}
             </div>
 
             <div className="form-group">
@@ -155,16 +174,18 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="form-control"
-                required
+                className={`form-control ${errors.role ? 'is-invalid' : ''}`}
               >
                 <option value="patient">Patient</option>
                 <option value="doctor">Doctor</option>
                 <option value="admin">Admin</option>
               </select>
+              {errors.role && (
+                <div className="invalid-feedback">{errors.role}</div>
+              )}
             </div>
 
-            <div className="alert alert-info" style={{ marginTop: '1rem' }}>
+            <div className="alert alert-info mt-3">
               <i className="fas fa-info-circle me-2"></i>
               To change password, use the Change Password feature.
             </div>

@@ -11,6 +11,7 @@ import PatientDashboard from './pages/PatientDashboard';
 
 // Import Layouts
 import AdminLayout from './components/admin/AdminLayout';
+import DoctorLayout from './components/doctor/DoctorLayout';
 
 // Import Utils
 import ProtectedRoute from './utils/ProtectedRoute';
@@ -42,10 +43,12 @@ function App() {
             path="/doctor/*" 
             element={
               <ProtectedRoute requiredRole="doctor">
-                <DoctorDashboard />
+                <DoctorLayout />
               </ProtectedRoute>
-            } 
-          />
+            }
+          >
+            <Route path="*" element={<DoctorDashboard />} />
+          </Route>
           
           {/* Protected Routes - Patient Only */}
           <Route 
