@@ -46,6 +46,7 @@ const userService = {
   // Update user
   updateUser: async (id, userData) => {
     try {
+      console.log('Updating user with data:', id,  userData);
       const response = await api.put(`/users/${id}`, userData);
       return response.data;
     } catch (error) {
