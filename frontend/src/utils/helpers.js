@@ -17,10 +17,13 @@ export const formatDate = (dateString) => {
 };
 
 // Format date to short format
+// Format date to short format (+24 hours)
 export const formatDateShort = (dateString) => {
   if (!dateString) return 'N/A';
   
   const date = new Date(dateString);
+  date.setTime(date.getTime() + 24 * 60 * 60 * 1000); // add 24 hours
+
   return date.toLocaleDateString('en-US', { 
     year: 'numeric', 
     month: 'short', 
@@ -28,16 +31,34 @@ export const formatDateShort = (dateString) => {
   });
 };
 
-// Format time only
+
+// Format time safely (works even if only "HH:mm" is provided)
 export const formatTime = (dateString) => {
   if (!dateString) return 'N/A';
-  
+
+  // If the value looks like "HH:mm" or "HH:mm:ss"
+  if (/^\d{2}:\d{2}(:\d{2})?$/.test(dateString)) {
+    const [hours, minutes, seconds] = dateString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(seconds || 0);
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+  }
+
+  // Otherwise, handle full date strings normally
   const date = new Date(dateString);
+  if (isNaN(date)) return 'N/A';
+  
   return date.toLocaleTimeString('en-US', { 
     hour: '2-digit', 
     minute: '2-digit' 
   });
 };
+
 
 // Capitalize first letter
 export const capitalize = (str) => {
