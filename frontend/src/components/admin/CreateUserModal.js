@@ -43,7 +43,17 @@ const CreateUserModal = ({ onClose, onUserCreated }) => {
 
     setLoading(true);
     try {
-      await userService.createUser(formData);
+      // Convert field names to match backend (snake_case)
+      const userData = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role
+      };
+      
+      await userService.createUser(userData);
       alert('User created successfully!');
       onUserCreated();
     } catch (error) {

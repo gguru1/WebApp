@@ -1,7 +1,7 @@
 // components/shared/ChangePasswordModal.js - Change Password Modal
 
 import React, { useState } from 'react';
-import userService from '../../services/userService';
+import api from '../../services/api';
 import authService from '../../services/authService';
 import { validatePasswordChange } from '../../utils/validators';
 
@@ -42,7 +42,8 @@ const ChangePasswordModal = ({ onClose, onPasswordChanged }) => {
 
     setLoading(true);
     try {
-      await userService.updatePassword(currentUser.id, {
+      // Use auth endpoint instead of user endpoint
+      const response = await api.put('/auth/change-password', {
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword
       });

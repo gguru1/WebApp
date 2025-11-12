@@ -1,0 +1,128 @@
+/* DoctorDashboard.css */
+
+:root {
+  --doctor-primary: #28a745;
+  --doctor-secondary: #20c997;
+  --doctor-dark: #1a1a1a;
+}
+
+.doctor-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.doctor-sidebar {
+  width: 250px;
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.doctor-main {
+  flex: 1;
+  margin-left: 250px;
+}
+
+.appointment-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-left: 4px solid var(--doctor-primary);
+}
+
+.appointment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+
+.appointment-time {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--doctor-primary);
+  margin-bottom: 0.5rem;
+}
+
+.appointment-patient {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--doctor-dark);
+}
+
+.appointment-status {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-scheduled {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-confirmed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-completed {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.filter-tab {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.filter-tab:hover {
+  color: var(--doctor-primary);
+}
+
+.filter-tab.active {
+  color: var(--doctor-primary);
+  border-bottom-color: var(--doctor-primary);
+}
+
+@media (max-width: 992px) {
+  .doctor-sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .doctor-sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .doctor-main {
+    margin-left: 0;
+  }
+}
