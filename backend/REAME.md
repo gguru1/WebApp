@@ -38,8 +38,8 @@ Create a `.env` file in the backend directory:
 ```env
 PORT=5000
 NODE_ENV=development
-DATABASE_URL=postgresql://postgres.qujxcynsgnwxthalxohx:youneverknow123@aws-1-us-east-2.pooler.supabase.com:5432/postgres
-JWT_SECRET=ug-healthconnect-jwt-secret-key-2025-change-in-production
+DATABASE_URL=<your_postgres_url>
+JWT_SECRET=<your_jwt_secret>
 JWT_EXPIRE=24h
 FRONTEND_URL=http://localhost:3000
 ```
