@@ -37,7 +37,7 @@ README.md
 
 ## Screenshots
 ### Authentication
-![Login](./screenshots/auth/login.png)
+![Login](./screenshots/loginpage.png)
 
 ### Admin Dashboard
 ![Admin Dashboard](./screenshots/admin/dashboard.png)
