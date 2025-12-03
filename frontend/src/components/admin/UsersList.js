@@ -52,8 +52,8 @@ const UsersList = () => {
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(user =>
-        user.firstName?.toLowerCase().includes(term) ||
-        user.lastName?.toLowerCase().includes(term) ||
+        (user.first_name || user.firstName)?.toLowerCase().includes(term) ||
+        (user.last_name || user.lastName)?.toLowerCase().includes(term) ||
         user.username?.toLowerCase().includes(term) ||
         user.email?.toLowerCase().includes(term)
       );
@@ -158,9 +158,8 @@ const UsersList = () => {
               </tr>
             ) : (
               filteredUsers.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.first_name}</td>
-                  <td>{user.last_name}</td>
+                <tr key={user.id || user.user_id || user.userId}>
+                  <td>{user.first_name || user.firstName} {user.last_name || user.lastName}</td>
                   <td>{user.username}</td>
                   <td>{user.email}</td>
                   <td>
@@ -168,7 +167,7 @@ const UsersList = () => {
                       {user.role}
                     </span>
                   </td>
-                  <td>{user.last_login ? formatDateShort(user.last_login) : 'Never'}</td>
+                  <td>{(user.last_login || user.lastLogin) ? formatDateShort(user.last_login || user.lastLogin) : 'Never'}</td>
                   <td>
                     <div className="table-actions-cell">
                       <button

@@ -33,13 +33,13 @@ const DoctorNavbar = ({ onToggleSidebarMobile }) => {
       <div className="navbar-user">
         <div className="user-info">
           <div className="user-name">
-            Dr. {user?.firstName} {user?.lastName}
+             {user?.first_name || user?.firstName} {user?.last_name || user?.lastName}
           </div>
           <div className="user-role">{user?.role}</div>
         </div>
         
         <div className="user-avatar">
-          {getInitials(user?.firstName, user?.lastName)}
+          {getInitials(user?.first_name || user?.firstName, user?.last_name || user?.lastName)}
         </div>
         
         <button 

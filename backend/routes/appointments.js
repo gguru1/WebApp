@@ -1,4 +1,4 @@
-// routes/appointments.js - Updated Appointment Routes
+// routes/appointments.js - Updated Appointment Routes - FIXED ORDER
 
 const express = require('express');
 const router = express.Router();
@@ -29,10 +29,15 @@ router.get('/doctor/:doctorId', protect, getDoctorAppointments);
 
 // CRUD routes
 router.get('/', protect, authorize('admin'), getAllAppointments);
-router.get('/:id', protect, getAppointment);
 router.post('/', protect, authorize('admin'), createAppointment);
 router.put('/:id', protect, updateAppointment);
-router.delete('/:id', protect, cancelAppointment); // Soft delete (cancel)
-router.delete('/:id/permanent', protect, authorize('admin'), deleteAppointment); // Hard delete (admin only)
+
+// DELETE ROUTES - ORDER MATTERS!
+// IMPORTANT: /permanent MUST come BEFORE /:id
+router.delete('/:id/permanent', protect, authorize('admin'), deleteAppointment); // Hard delete (admin only) - MUST BE FIRST
+router.delete('/:id', protect, cancelAppointment); // Soft delete (cancel) - MUST BE SECOND
+
+// GET by ID - MUST come after all specific routes
+router.get('/:id', protect, getAppointment);
 
 module.exports = router;

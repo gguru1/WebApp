@@ -3,14 +3,12 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AppointmentsList from '../components/doctor/AppointmentsList';
-import PatientsList from '../components/doctor/PatientsList';
 import DoctorSettings from '../components/doctor/DoctorSettings';
 
 const DoctorDashboard = () => {
   return (
     <Routes>
       <Route index element={<AppointmentsList />} />
-      <Route path="patients" element={<PatientsList />} />
       <Route path="settings" element={<DoctorSettings />} />
     </Routes>
   );

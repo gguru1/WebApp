@@ -16,10 +16,20 @@ export const formatDate = (dateString) => {
   return date.toLocaleDateString('en-US', options);
 };
 
-// Format date to short format
-// Format date to short format (+24 hours)
+// Format date to short format - FIXED for timezone issues
 export const formatDateShort = (dateString) => {
   if (!dateString) return 'N/A';
+  
+  // Handle date-only strings (YYYY-MM-DD) without timezone conversion
+  if (typeof dateString === 'string' && dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  }
   
   const date = new Date(dateString);
   date.setTime(date.getTime() + 24 * 60 * 60 * 1000); // add 24 hours
@@ -31,28 +41,22 @@ export const formatDateShort = (dateString) => {
   });
 };
 
-
-// Format time safely (works even if only "HH:mm" is provided)
-export const formatTime = (dateString) => {
-  if (!dateString) return 'N/A';
-
-  // If the value looks like "HH:mm" or "HH:mm:ss"
-  if (/^\d{2}:\d{2}(:\d{2})?$/.test(dateString)) {
-    const [hours, minutes, seconds] = dateString.split(':').map(Number);
-    const date = new Date();
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    date.setSeconds(seconds || 0);
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
-  }
-
-  // Otherwise, handle full date strings normally
-  const date = new Date(dateString);
-  if (isNaN(date)) return 'N/A';
+// Format time only - FIXED for TIME data type
+export const formatTime = (timeString) => {
+  if (!timeString) return 'N/A';
   
+  // Handle TIME format from database (HH:MM:SS or HH:MM)
+  if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}(:\d{2})?$/)) {
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours);
+    const min = minutes;
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${min} ${ampm}`;
+  }
+  
+  // Handle full datetime
+  const date = new Date(timeString);
   return date.toLocaleTimeString('en-US', { 
     hour: '2-digit', 
     minute: '2-digit' 

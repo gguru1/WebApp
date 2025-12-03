@@ -1,32 +1,54 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import authService from "../../services/authService";
+// components/patient/PatientNavbar.js
 
-const PatientNavbar = () => {
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import authService from '../../services/authService';
+import { getInitials } from '../../utils/helpers';
+
+const PatientNavbar = ({ onToggleSidebarMobile }) => {
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
 
   const handleLogout = () => {
-    authService.logout();
-    navigate("/login");
+    if (window.confirm('Are you sure you want to logout?')) {
+      authService.logout();
+      navigate('/login');
+    }
   };
 
   return (
-    <nav className="navbar navbar-dark bg-info shadow-sm">
-      <div className="container-fluid">
-        <span className="navbar-brand mb-0 h1">
-          <i className="fas fa-user me-2"></i>
-          Patient Dashboard
-        </span>
-        <div>
-          <span className="text-white me-3">
-            Welcome, {user?.firstName || user?.username}
-          </span>
-          <button onClick={handleLogout} className="btn btn-outline-light btn-sm">
-            <i className="fas fa-sign-out-alt me-1"></i>
-            Logout
-          </button>
+    <nav className="admin-navbar">
+      <button className="navbar-toggle" onClick={onToggleSidebarMobile}>
+        <i className="fas fa-bars"></i>
+      </button>
+
+      <div className="navbar-search">
+        <input 
+          type="text" 
+          placeholder="Search..." 
+          className="form-control"
+        />
+      </div>
+
+      <div className="navbar-user">
+        <div className="user-info">
+          <div className="user-name">
+            {user?.first_name || user?.firstName} {user?.last_name || user?.lastName}
+          </div>
+          <div className="user-role">{user?.role}</div>
         </div>
+        
+        <div className="user-avatar">
+          {getInitials(user?.first_name || user?.firstName, user?.last_name || user?.lastName)}
+        </div>
+        
+        <button 
+          className="btn btn-sm btn-outline-danger"
+          onClick={handleLogout}
+        >
+          <i className="fas fa-sign-out-alt me-1"></i>
+          Logout
+        </button>
       </div>
     </nav>
   );

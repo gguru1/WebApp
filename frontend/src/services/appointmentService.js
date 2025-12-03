@@ -97,10 +97,10 @@ const appointmentService = {
     }
   },
 
-  // Cancel appointment
+  // Cancel appointment (soft delete - changes status to cancelled)
   cancelAppointment: async (id) => {
     try {
-      const response = await api.put(`/appointments/${id}/cancel`);
+      const response = await api.delete(`/appointments/${id}`);
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to cancel appointment' };

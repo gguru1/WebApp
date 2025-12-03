@@ -1,0 +1,175 @@
+CSC 423 – Patient Portal Web App
+🔹 Core System Requirements
+User Roles
+
+ Admin/Clerk
+ + create users - //done
+ + view users - //done
+ + update users - //done
+ + delete users - //done
+
+ Admin/Clerk can create/view/update/delete appointments
+
+ Admin can view lists: all appointments, all patients, all doctors
+
+ Admin can search appointments (by patient name / doctor name)
+
+ Patient can view their appointments (past + future)
+
+ Patient can cancel their appointments
+
+ Doctor can view their appointments (day/week/month) 
+
+General App Requirements
+
+ Common login page for all roles
+
+ After login, show role-based dashboard // done
+
+ All users can change password // done
+
+ App must be a Single Page Application (React SPA) // done
+
+ JWT authentication stored in localStorage //done
+
+🔹 Data Models
+User
+
+id
+
+firstName
+
+lastName
+
+username
+
+password (hashed)
+
+role
+
+lastLogin
+
+lastPasswordChange
+
+list of appointments
+
+Appointment
+
+id
+
+date
+
+startTime
+
+endTime
+
+patientId
+
+doctorId
+
+lastUpdated
+
+🔹 Team Workflow Requirements
+
+ Use GitHub repo with collaborators
+
+ Each member works in their own branch
+
+ Use GitHub Kanban board
+
+ Write README.md
+
+ Include comments in code
+
+ Maintain planning artifacts (mockups, stories, retrospectives)
+
+ Use Discord/daily standups
+
+ Practice pair coding
+
+🔹 Project Deliverables
+
+ Working SPA web app
+
+ Four demos (end of each epic)
+
+ Documentation portfolio
+
+ GitHub repo
+
+ Kanban board screenshots
+
+🔹 EPIC Breakdown
+⭐ EPIC 1 (Sept 8–22) – Planning & UI mockups
+Deliverables:
+
+ Initial plan: features + user stories
+
+ UI mockups
+
+ Requirements analysis artifacts
+
+ Kanban backlog snapshot
+
+ Retrospective
+
+ Demo 1
+
+⭐ EPIC 2 (Sept 22–Oct 20) – Database + Login + Auth
+Deliverables:
+
+ Database designed + seeded with 1 admin, 1 patient, 1 doctor
+
+ HTML login page
+
+ User authentication (DB + JWT in localStorage)
+
+ API route /users or /api/users (POST = authenticate)
+
+ After login, show simple role-based page
+
+ Kanban snapshot
+
+ Retrospective
+
+ Demo 2
+
+⭐ EPIC 3 (Oct 20–Nov 12) – React SPA + Role Pages
+Deliverables:
+
+ Convert HTML pages → React components (admin.jsx, patient.jsx, doctor.jsx)
+
+ Make app a Single Page Application
+
+ Add API routes for CRUD + appointments
+
+ Example:
+
+Admin: PUT /users create user
+
+Patient: GET /appointment/:userId view appointments
+
+ Kanban snapshot
+
+ Retrospective
+
+ Demo 3
+
+⭐ EPIC 4 (Nov 12–Dec 3) – Full Functionality
+Deliverables:
+
+ Appointment CRUD in Admin dashboard
+
+ Full Patient dashboard (view + cancel)
+
+ Full Doctor dashboard (day/week/month views)
+
+ SPA final version
+
+ Kanban snapshot
+
+ Retrospective
+
+ Final documentation portfolio
+
+ Final Demo (Dec 3)
