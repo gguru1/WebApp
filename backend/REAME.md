@@ -51,7 +51,7 @@ FRONTEND_URL=http://localhost:3000
 This creates tables and adds demo users:
 
 ```bash
-not implemented
+npm run seed
 ```
 
 ### 5. Start Development Server
