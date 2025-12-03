@@ -211,7 +211,6 @@ const CreateUserModal = ({ onClose, onUserCreated }) => {
                 </>
               ) : (
                 <>
-                  <i className="fas fa-save me-2"></i>
                   Create User
                 </>
               )}

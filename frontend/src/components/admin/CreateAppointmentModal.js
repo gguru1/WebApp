@@ -252,7 +252,6 @@ const CreateAppointmentModal = ({ onClose, onAppointmentCreated }) => {
                 </>
               ) : (
                 <>
-                  <i className="fas fa-save me-2"></i>
                   Create Appointment
                 </>
               )}
