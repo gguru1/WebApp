@@ -9,20 +9,24 @@ User Roles
  + delete users - //done
 
  Admin/Clerk can create/view/update/delete appointments
+ + create appointment - //done
+ + view appointment - //done
+ + edit appointment - //done
+ + delete appointment - //done
 
- Admin can view lists: all appointments, all patients, all doctors
+ Admin can view lists: all appointments, all patients, all doctors - //done
 
- Admin can search appointments (by patient name / doctor name)
+ Admin can search appointments (by patient name / doctor name) - //done
 
- Patient can view their appointments (past + future)
+ Patient can view their appointments (past + future) - //done
 
- Patient can cancel their appointments
+ Patient can cancel their appointments - //done
 
- Doctor can view their appointments (day/week/month) 
+ Doctor can view their appointments (day/week/month)  - //done
 
 General App Requirements
 
- Common login page for all roles
+ Common login page for all roles - //done
 
  After login, show role-based dashboard // done
 
@@ -71,15 +75,15 @@ lastUpdated
 
 🔹 Team Workflow Requirements
 
- Use GitHub repo with collaborators
+ Use GitHub repo with collaborators - //done
 
- Each member works in their own branch
+ Each member works in their own branch - //done
 
- Use GitHub Kanban board
+ Use GitHub Kanban board - //done
 
- Write README.md
+ Write README.md -//done
 
- Include comments in code
+ Include comments in code - //done
 
  Maintain planning artifacts (mockups, stories, retrospectives)
 

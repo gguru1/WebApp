@@ -42,7 +42,6 @@ const DeleteUserModal = ({ user, onClose, onUserDeleted }) => {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>
-            <i className="fas fa-exclamation-triangle me-2 text-danger"></i>
             Delete User
           </h3>
           <button className="modal-close" onClick={onClose}>
@@ -59,7 +58,6 @@ const DeleteUserModal = ({ user, onClose, onUserDeleted }) => {
           ) : (
             <>
               <div className="alert alert-warning">
-                <i className="fas fa-exclamation-triangle me-2"></i>
                 <strong>Warning:</strong> This action cannot be undone!
               </div>
 
@@ -136,7 +134,6 @@ const DeleteUserModal = ({ user, onClose, onUserDeleted }) => {
                 </>
               ) : (
                 <>
-                  <i className="fas fa-trash me-2"></i>
                   Delete User
                 </>
               )}
