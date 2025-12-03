@@ -75,10 +75,8 @@ const PatientAppointments = () => {
         {upcomingAppointments.length === 0 ? (
           <div className="card text-center py-5">
             <div className="card-body">
-              
               <h5>No upcoming appointments</h5>
               <div className="alert alert-info mt-3">
-                
                 <strong>Note:</strong> To book an appointment, please contact the clinic clerk or admin.
               </div>
             </div>
@@ -89,7 +87,6 @@ const PatientAppointments = () => {
               <div className="row align-items-center">
                 <div className="col-md-3">
                   <div className="appointment-time">
-                    <i className="fas fa-clock me-2"></i>
                     {formatTime(appointment.start_time)}
                   </div>
                   <div className="text-muted">
@@ -99,7 +96,6 @@ const PatientAppointments = () => {
 
                 <div className="col-md-4">
                   <div className="appointment-patient">
-                    <i className="fas fa-user-md me-2"></i>
                     Dr. {appointment.doctor?.first_name} {appointment.doctor?.last_name}
                   </div>
                   <div className="text-muted">
@@ -130,7 +126,7 @@ const PatientAppointments = () => {
       </div>
 
       <div>
-        <h4>Past Appointments</h4>
+        <h4>Past & Cannel Appointments</h4>
         {pastAppointments.length === 0 ? (
           <div className="card text-center py-4">
             <div className="card-body">

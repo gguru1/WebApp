@@ -66,7 +66,7 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
         role: formData.role
       };
       
-      await userService.updateUser(user.id, userData);
+      await userService.updateUser(user.user_id, userData);
       alert('User updated successfully!');
       onUserUpdated();
     } catch (error) {
