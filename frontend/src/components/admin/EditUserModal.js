@@ -6,6 +6,7 @@ import { validateUserForm } from '../../utils/validators';
 
 const EditUserModal = ({ user, onClose, onUserUpdated }) => {
   const [formData, setFormData] = useState({
+    id: '',
     firstName: '',
     lastName: '',
     username: '',
@@ -18,6 +19,7 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
   useEffect(() => {
     if (user) {
       setFormData({
+        id: user.id || '',
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         username: user.username || '',

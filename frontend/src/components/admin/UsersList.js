@@ -30,6 +30,7 @@ const UsersList = () => {
     try {
       setLoading(true);
       const data = await userService.getAllUsers();
+      console.log('Fetched users:', data);
       setUsers(data.users || data);
     } catch (error) {
       console.error('Error loading users:', error);
@@ -139,7 +140,8 @@ const UsersList = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>First Name</th>
+              <th>LastName</th>
               <th>Username</th>
               <th>Email</th>
               <th>Role</th>

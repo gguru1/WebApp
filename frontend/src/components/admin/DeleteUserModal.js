@@ -10,18 +10,21 @@ const DeleteUserModal = ({ user, onClose, onUserDeleted }) => {
 
   const handleDelete = async () => {
     // Prevent admin from deleting themselves
-    if (user.id === currentUser.id) {
+    const userId = user.user_id || user.id;
+    const currentUserId = currentUser.user_id || currentUser.id;
+    
+    if (userId === currentUserId) {
       alert('You cannot delete your own account!');
       return;
     }
 
-    if (!window.confirm(`Are you absolutely sure you want to delete ${user.firstName} ${user.lastName}?`)) {
+    if (!window.confirm(`Are you absolutely sure you want to delete ${user.first_name || user.firstName} ${user.last_name || user.lastName}?`)) {
       return;
     }
 
     setLoading(true);
     try {
-      await userService.deleteUser(user.id);
+      await userService.deleteUser(user.user_id || user.id);
       alert('User deleted successfully!');
       onUserDeleted();
     } catch (error) {
@@ -32,7 +35,7 @@ const DeleteUserModal = ({ user, onClose, onUserDeleted }) => {
     }
   };
 
-  const canDelete = user.id !== currentUser.id;
+  const canDelete = (user.user_id || user.id) !== (currentUser.user_id || currentUser.id);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -71,7 +74,7 @@ const DeleteUserModal = ({ user, onClose, onUserDeleted }) => {
                       <strong>Name:</strong>
                     </div>
                     <div className="col-6">
-                      {user.firstName} {user.lastName}
+                      {user.first_name || user.firstName} {user.last_name || user.lastName}
                     </div>
                   </div>
                   <div className="row mt-2">

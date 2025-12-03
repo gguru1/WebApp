@@ -32,6 +32,8 @@ export const formatDateShort = (dateString) => {
   }
   
   const date = new Date(dateString);
+  date.setTime(date.getTime() + 24 * 60 * 60 * 1000); // add 24 hours
+
   return date.toLocaleDateString('en-US', { 
     year: 'numeric', 
     month: 'short', 
@@ -60,6 +62,7 @@ export const formatTime = (timeString) => {
     minute: '2-digit' 
   });
 };
+
 
 // Capitalize first letter
 export const capitalize = (str) => {
