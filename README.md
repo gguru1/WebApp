@@ -50,7 +50,7 @@ README.md
 ![Patient Dashboard](./screenshots/patient/patientpage3.png)
 
 ### Doctor Dashboard
-![Doctor Dashboard](./screenshots/doctor/doctorpage1.png)
+![Doctor Dashboard](./screenshots/doctor/doctorpage.png)
 
 ## Support
 
