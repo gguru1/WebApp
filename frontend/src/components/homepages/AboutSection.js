@@ -38,7 +38,7 @@ const AboutSection = () => {
         
         <div className="row g-4 mb-5">
           {features.map((feature, index) => (
-            <div key={index} className="col-lg-4 col-md-6">
+            <div key={index} className="col-lg-4 col-md-4">
               <div className="about-feature">
                 <div className={`about-icon ${feature.iconClass} mb-3`}>
                   <i className={feature.icon}></i>

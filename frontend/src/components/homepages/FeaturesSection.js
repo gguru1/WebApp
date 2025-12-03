@@ -64,7 +64,7 @@ const FeaturesSection = () => {
         
         <div className="row g-4">
           {features.map((feature) => (
-            <div key={feature.id} className="col-lg-4 col-md-6">
+            <div key={feature.id} className="col-lg-4 col-md-4">
               <div className="card feature-card h-100 shadow-sm border-0">
                 <div className="card-body p-4 text-center">
                   <div className={`feature-icon ${feature.iconClass} mb-3`}>
