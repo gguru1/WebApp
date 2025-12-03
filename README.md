@@ -35,14 +35,18 @@ Users authenticate and are routed to dashboards based on one of three roles: Adm
 README.md
 ```
 
-Screenshots
-Authentication
+## Screenshots
+### Authentication
+![Login](./screenshots/auth/login.png)
 
-Admin Dashboard
+### Admin Dashboard
+![Admin Dashboard](./screenshots/admin/dashboard.png)
 
-Patient Dashboard
+### Patient Dashboard
+![Patient Dashboard](./screenshots/patient/dashboard.png)
 
-Doctor Dashboard
+### Doctor Dashboard
+![Doctor Dashboard](./screenshots/doctor/dashboard.png)
 
 ## Support
 
