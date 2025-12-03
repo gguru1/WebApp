@@ -40,13 +40,17 @@ README.md
 ![Login](./screenshots/loginpage.png)
 
 ### Admin Dashboard
-![Admin Dashboard](./screenshots/admin/dashboard.png)
+![Admin Dashboard](./screenshots/admin/adminpage1.png)
+![Admin Dashboard](./screenshots/admin/adminpage2.png)
+![Admin Dashboard](./screenshots/admin/adminpage3.png)
 
 ### Patient Dashboard
-![Patient Dashboard](./screenshots/patient/dashboard.png)
+![Patient Dashboard](./screenshots/patient/patientpage1.png)
+![Patient Dashboard](./screenshots/patient/patientpage2.png)
+![Patient Dashboard](./screenshots/patient/patientpage3.png)
 
 ### Doctor Dashboard
-![Doctor Dashboard](./screenshots/doctor/dashboard.png)
+![Doctor Dashboard](./screenshots/doctor/doctorpage1.png)
 
 ## Support
 
