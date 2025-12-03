@@ -6,7 +6,6 @@ import authService from '../services/authService';
 import Navbar from '../components/homepages/Navbar';
 import HeroSection from '../components/homepages/HeroSection';
 import FeaturesSection from '../components/homepages/FeaturesSection';
-import TechnologySection from '../components/homepages/TechnologySection';
 import AboutSection from '../components/homepages/AboutSection';
 import ContactSection from '../components/homepages/ContactSection';
 import Footer from '../components/homepages/Footer';
@@ -76,8 +75,6 @@ const HomePage = () => {
       <HeroSection onLoginClick={handleLoginRedirect} />
       
       <FeaturesSection />
-      
-      <TechnologySection />
       
       <AboutSection />
       
