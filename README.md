@@ -1,6 +1,9 @@
-# UG HealthConnect Backend
+# UG HealthConnect — Patient Portal Web App
 
-Backend API for UG HealthConnect - Primary Care Management System
+UG HealthConnect — Patient Portal Web App
+CSC 423 Fall 2025 Team Project
+- A Single-Page Web App for managing users and appointments in a primary-care medical clinic.
+Users authenticate and are routed to dashboards based on one of three roles: Admin/Clerk, Patient, Doctor.
 
 ## Tech Stack
 
