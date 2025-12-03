@@ -25,12 +25,11 @@ const AdminSettings = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">
-                <i className="fas fa-user me-2"></i>
                 Profile Information
               </h5>
               <div className="mt-3">
                 <div className="mb-3">
-                  <strong>Name:</strong> {user?.firstName} {user?.lastName}
+                  <strong>Name:</strong> Admin {user?.firstName} {user?.lastName}
                 </div>
                 <div className="mb-3">
                   <strong>Email:</strong> {user?.email}
@@ -50,7 +49,6 @@ const AdminSettings = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">
-                <i className="fas fa-lock me-2"></i>
                 Security
               </h5>
               <p className="text-muted">Manage your account security settings</p>
@@ -58,7 +56,6 @@ const AdminSettings = () => {
                 className="btn btn-primary"
                 onClick={() => setShowPasswordModal(true)}
               >
-                <i className="fas fa-key me-2"></i>
                 Change Password
               </button>
             </div>

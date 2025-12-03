@@ -1,10 +1,10 @@
-// components/doctor/DoctorSettings.js
+// components/patient/PatientSettings.js
 
 import React, { useState } from 'react';
 import ChangePasswordModal from '../shared/ChangePasswordModal';
 import authService from '../../services/authService';
 
-const DoctorSettings = () => {
+const PatientSettings = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const user = authService.getCurrentUser();
 
@@ -20,6 +20,7 @@ const DoctorSettings = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">
+                
                 Profile Information
               </h5>
               <div className="mt-3">
@@ -33,7 +34,7 @@ const DoctorSettings = () => {
                   <strong>Username:</strong> {user?.username}
                 </div>
                 <div className="mb-3">
-                  <strong>Role:</strong> <span className="badge badge-success">{user?.role}</span>
+                  <strong>Role:</strong> <span className="badge badge-info">{user?.role}</span>
                 </div>
               </div>
             </div>
@@ -44,6 +45,7 @@ const DoctorSettings = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">
+                
                 Security
               </h5>
               <p className="text-muted">Manage your account security settings</p>
@@ -51,6 +53,7 @@ const DoctorSettings = () => {
                 className="btn btn-primary"
                 onClick={() => setShowPasswordModal(true)}
               >
+                
                 Change Password
               </button>
             </div>
@@ -61,13 +64,11 @@ const DoctorSettings = () => {
       {showPasswordModal && (
         <ChangePasswordModal
           onClose={() => setShowPasswordModal(false)}
-          onPasswordChanged={() => {
-            setShowPasswordModal(false);
-          }}
+          onPasswordChanged={() => setShowPasswordModal(false)}
         />
       )}
     </>
   );
 };
 
-export default DoctorSettings;
+export default PatientSettings;

@@ -30,8 +30,11 @@ const AppointmentsList = () => {
   const loadAppointments = async () => {
     try {
       setLoading(true);
+      console.log('Loading all appointments...');
       const data = await appointmentService.getAllAppointments();
       const appointmentsList = data.appointments || data || [];
+      console.log('Loaded appointments count:', appointmentsList.length);
+      console.log('Appointments:', appointmentsList);
       setAppointments(appointmentsList);
     } catch (error) {
       console.error('Error loading appointments:', error);
@@ -183,7 +186,7 @@ const AppointmentsList = () => {
                     </td>
                     <td>{appointment.reason || 'General Consultation'}</td>
                     <td>
-                      <span className={`badge badge-${getStatusBadgeColor(appointment.status)}`}>
+                      <span className={`appointment-status status-${appointment.status}`}>
                         {appointment.status}
                       </span>
                     </td>

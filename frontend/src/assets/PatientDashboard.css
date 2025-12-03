@@ -1,0 +1,94 @@
+/* PatientDashboard.css */
+
+:root {
+  --patient-primary: #17a2b8;
+  --patient-secondary: #20c997;
+  --patient-dark: #1a1a1a;
+}
+
+.patient-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.patient-sidebar {
+  width: 250px;
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.patient-main {
+  flex: 1;
+  margin-left: 250px;
+}
+
+.appointment-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-left: 4px solid var(--patient-primary);
+}
+
+.appointment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+
+.book-appointment-card {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.doctor-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.doctor-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+@media (max-width: 992px) {
+  .patient-sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .patient-sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .patient-main {
+    margin-left: 0;
+  }
+}

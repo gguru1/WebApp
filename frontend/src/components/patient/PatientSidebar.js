@@ -1,31 +1,35 @@
-// components/doctor/DoctorSidebar.js
+// components/patient/PatientSidebar.js
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const DoctorSidebar = ({ show, onClose }) => {
+const PatientSidebar = ({ show, onClose }) => {
   const menuItems = [
     {
-      path: '/doctor',
-      icon: 'fas fa-calendar-alt',
-      label: 'My Appointments',
+      path: '/patient',
+      icon: 'fas fa-home',
+      label: 'Dashboard',
       exact: true
     },
-  
     {
-      path: '/doctor/settings',
+      path: '/patient/appointments',
+      icon: 'fas fa-calendar-alt',
+      label: 'My Appointments'
+    },
+    {
+      path: '/patient/settings',
       icon: 'fas fa-cog',
       label: 'Settings'
     }
   ];
 
   return (
-    <aside className={`admin-sidebar doctor-sidebar ${show ? 'show' : ''}`}>
+    <aside className={`admin-sidebar patient-sidebar ${show ? 'show' : ''}`}>
       <div className="sidebar-brand">
         <div className="brand-icon">
-          <i className="fas fa-user-md"></i>
+          <i className="fas fa-user"></i>
         </div>
-        <h4>Doctor Portal</h4>
+        <h4>Patient Portal</h4>
       </div>
 
       <nav className="sidebar-menu">
@@ -48,4 +52,4 @@ const DoctorSidebar = ({ show, onClose }) => {
   );
 };
 
-export default DoctorSidebar;
+export default PatientSidebar;

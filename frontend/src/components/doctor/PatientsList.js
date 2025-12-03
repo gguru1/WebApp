@@ -27,8 +27,8 @@ const PatientsList = () => {
   };
 
   const filteredPatients = patients.filter(patient =>
-    patient.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (patient.first_name || patient.firstName)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (patient.last_name || patient.lastName)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     patient.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -79,11 +79,11 @@ const PatientsList = () => {
                 </tr>
               ) : (
                 filteredPatients.map((patient) => (
-                  <tr key={patient.id}>
-                    <td>{patient.firstName} {patient.lastName}</td>
+                  <tr key={patient.user_id || patient.id}>
+                    <td>{patient.first_name || patient.firstName} {patient.last_name || patient.lastName}</td>
                     <td>{patient.email}</td>
                     <td>{patient.phone || 'N/A'}</td>
-                    <td>{patient.lastVisit || 'No visits'}</td>
+                    <td>{patient.last_visit || patient.lastVisit || 'No visits'}</td>
                   </tr>
                 ))
               )}

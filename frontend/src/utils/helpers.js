@@ -16,9 +16,20 @@ export const formatDate = (dateString) => {
   return date.toLocaleDateString('en-US', options);
 };
 
-// Format date to short format
+// Format date to short format - FIXED for timezone issues
 export const formatDateShort = (dateString) => {
   if (!dateString) return 'N/A';
+  
+  // Handle date-only strings (YYYY-MM-DD) without timezone conversion
+  if (typeof dateString === 'string' && dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  }
   
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', { 
@@ -28,11 +39,22 @@ export const formatDateShort = (dateString) => {
   });
 };
 
-// Format time only
-export const formatTime = (dateString) => {
-  if (!dateString) return 'N/A';
+// Format time only - FIXED for TIME data type
+export const formatTime = (timeString) => {
+  if (!timeString) return 'N/A';
   
-  const date = new Date(dateString);
+  // Handle TIME format from database (HH:MM:SS or HH:MM)
+  if (typeof timeString === 'string' && timeString.match(/^\d{2}:\d{2}(:\d{2})?$/)) {
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours);
+    const min = minutes;
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${min} ${ampm}`;
+  }
+  
+  // Handle full datetime
+  const date = new Date(timeString);
   return date.toLocaleTimeString('en-US', { 
     hour: '2-digit', 
     minute: '2-digit' 

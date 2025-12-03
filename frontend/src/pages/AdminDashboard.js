@@ -38,7 +38,6 @@ const DashboardHome = () => {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">
-                <i className="fas fa-info-circle me-2"></i>
                 Welcome to Admin Dashboard
               </h5>
               <p className="card-text">
@@ -48,15 +47,15 @@ const DashboardHome = () => {
                 <h6>Quick Links:</h6>
                 <div className="d-flex gap-2 flex-wrap">
                   <a href="/admin/users" className="btn btn-primary btn-sm">
-                    <i className="fas fa-users me-2"></i>
+                    
                     Manage Users
                   </a>
                   <a href="/admin/appointments" className="btn btn-success btn-sm">
-                    <i className="fas fa-calendar me-2"></i>
+                    
                     Manage Appointments
                   </a>
                   <a href="/admin/settings" className="btn btn-info btn-sm">
-                    <i className="fas fa-cog me-2"></i>
+                    
                     Settings
                   </a>
                 </div>

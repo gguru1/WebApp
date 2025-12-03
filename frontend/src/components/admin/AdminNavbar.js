@@ -50,7 +50,6 @@ const AdminNavbar = ({ onToggleSidebar, onToggleSidebarMobile }) => {
           className="btn btn-sm btn-outline-danger"
           onClick={handleLogout}
         >
-          <i className="fas fa-sign-out-alt me-1"></i>
           Logout
         </button>
       </div>
