@@ -1,5 +1,5 @@
 CSC 423 – Patient Portal Web App
-🔹 Core System Requirements
+Core System Requirements
 User Roles
 
  Admin/Clerk
@@ -36,7 +36,7 @@ General App Requirements
 
  JWT authentication stored in localStorage //done
 
-🔹 Data Models
+Data Models
 User
 
 id
@@ -73,7 +73,7 @@ doctorId
 
 lastUpdated
 
-🔹 Team Workflow Requirements
+Team Workflow Requirements
 
  Use GitHub repo with collaborators - //done
 
@@ -91,7 +91,7 @@ lastUpdated
 
  Practice pair coding
 
-🔹 Project Deliverables
+Project Deliverables
 
  Working SPA web app
 
@@ -103,8 +103,8 @@ lastUpdated
 
  Kanban board screenshots
 
-🔹 EPIC Breakdown
-⭐ EPIC 1 (Sept 8–22) – Planning & UI mockups
+EPIC Breakdown
+EPIC 1 (Sept 8–22) – Planning & UI mockups
 Deliverables:
 
  Initial plan: features + user stories
@@ -119,7 +119,7 @@ Deliverables:
 
  Demo 1
 
-⭐ EPIC 2 (Sept 22–Oct 20) – Database + Login + Auth
+EPIC 2 (Sept 22–Oct 20) – Database + Login + Auth
 Deliverables:
 
  Database designed + seeded with 1 admin, 1 patient, 1 doctor
@@ -138,7 +138,7 @@ Deliverables:
 
  Demo 2
 
-⭐ EPIC 3 (Oct 20–Nov 12) – React SPA + Role Pages
+EPIC 3 (Oct 20–Nov 12) – React SPA + Role Pages
 Deliverables:
 
  Convert HTML pages → React components (admin.jsx, patient.jsx, doctor.jsx)
@@ -159,7 +159,7 @@ Patient: GET /appointment/:userId view appointments
 
  Demo 3
 
-⭐ EPIC 4 (Nov 12–Dec 3) – Full Functionality
+EPIC 4 (Nov 12–Dec 3) – Full Functionality
 Deliverables:
 
  Appointment CRUD in Admin dashboard
