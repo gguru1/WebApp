@@ -19,32 +19,32 @@ const adminData = {
 
 const seedDatabase = async () => {
     try {
-        console.log('🌱 Starting database seeding...');
+        console.log('Starting database seeding...');
 
         await sequelize.authenticate();
-        console.log('✅ Connected to Supabase PostgreSQL');
+        console.log('Connected to Supabase PostgreSQL');
 
         // Drop and recreate tables
         await sequelize.sync({ force: true });
-        console.log('✅ Database tables created');
+        console.log('Database tables created');
 
-        console.log('👥 Creating admin user...');
+        console.log('Creating admin user...');
         
         // Create admin user with individual hooks for password hashing
         const admin = await User.create(adminData, {
             individualHooks: true
         });
-        console.log(`✅ Created admin user: ${admin.username}`);
+        console.log(`Created admin user: ${admin.username}`);
 
-        console.log('\n🎉 Database seeding completed successfully!');
-        console.log('\n📋 Admin Credentials:');
+        console.log('\nDatabase seeding completed successfully!');
+        console.log('\nAdmin Credentials:');
         console.log('Username: admin');
         console.log('Password: admin123');
-        console.log('\n⚠️  Note: All patients, doctors, and appointments should be created through the admin dashboard.');
+        console.log('\nNote: All patients, doctors, and appointments should be created through the admin dashboard.');
 
         process.exit(0);
     } catch (error) {
-        console.error('❌ Error seeding database:', error);
+        console.error('Error seeding database:', error);
         process.exit(1);
     }
 };
