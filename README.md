@@ -58,4 +58,4 @@ For issues or questions, contact the development team.
 
 ---
 
-**Note:** This is a course project for CSC423 - Web Development Application at University of Ghana.# WebApp
+**Note:** This is a course project for CSC423 - Web Development Application.# WebApp
